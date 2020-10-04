@@ -1,34 +1,29 @@
 <template>
   <div class="container">
     <div>
-      <Logo />
-      <h1 class="title">
-        hello
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+      <ul>
+        <li v-for="user in users" :key="user.id">
+          {{ user.id }} , {{ user.name }}, {{ user.company.name }}
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+const axios = require('axios')
+let url = 'https://jsonplaceholder.typicode.com/users'
+export default {
+  asyncData({ params, error }) {
+    return axios.get(url)
+      .then((res) => {
+        return { users: res.data}
+      })
+      .catch((e => {
+        error({ users: e.response.status, message: '予期せぬ障害が起こりました。管理者に連絡してください。' })
+      }))
+  }
+}
 </script>
 
 <style>
